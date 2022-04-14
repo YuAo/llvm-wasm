@@ -1,0 +1,44 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Build
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build
+        run: |
+          sudo apt-get -y install ninja-build
+          
+          git clone https://github.com/emscripten-core/emsdk
+          cd emsdk
+          ./emsdk install latest
+          ./emsdk activate latest
+          source ./emsdk_env.sh
+          cd ..
+          
+          git clone https://github.com/llvm/llvm-project
+          cd llvm-project
+          cmake -G Ninja -S llvm -B build-host \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DLLVM_ENABLE_PROJECTS=clang
+          cmake --build build-host --target clang-tblgen llvm-tblgen
+          
+          emcmake cmake -G Ninja -S llvm -B build \
+          -DCMAKE_BUILD_TYPE=Release \
+          -DCMAKE_CROSSCOMPILING=True \
+          -DCMAKE_INSTALL_PREFIX=install \
+          -DCMAKE_CXX_FLAGS='-O3 -s NO_ASSERTIONS -s NO_INVOKE_RUN -s EXIT_RUNTIME -s ALLOW_MEMORY_GROWTH -s INITIAL_MEMORY=64MB -s MODULARIZE -s EXPORT_ES6 -s EXTRA_EXPORTED_RUNTIME_METHODS=["callMain","FS"]' \
+          -DLLVM_ENABLE_THREADS=OFF \
+          -DLLVM_DEFAULT_TARGET_TRIPLE=wasm32-wasi \
+          -DLLVM_TARGET_ARCH=wasm32-emscripten \
+          -DLLVM_ENABLE_PROJECTS=lld \
+          -DLLVM_TABLEGEN=$PWD/build-host/bin/llvm-tblgen
+          cmake --build build
