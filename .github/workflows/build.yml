@@ -17,14 +17,14 @@ jobs:
         run: |
           sudo apt-get -y install ninja-build
           
-          git clone https://github.com/emscripten-core/emsdk
+          git clone https://github.com/emscripten-core/emsdk –depth 1
           cd emsdk
           ./emsdk install latest
           ./emsdk activate latest
           source ./emsdk_env.sh
           cd ..
           
-          git clone https://github.com/llvm/llvm-project
+          git clone https://github.com/llvm/llvm-project –depth 1
           cd llvm-project
           cmake -G Ninja -S llvm -B build-host \
             -DCMAKE_BUILD_TYPE=Release \
@@ -42,3 +42,11 @@ jobs:
           -DLLVM_ENABLE_PROJECTS=lld \
           -DLLVM_TABLEGEN=$PWD/build-host/bin/llvm-tblgen
           cmake --build build
+          
+          cd build
+          tar -czvf bin.tgz bin/{llc,lld,ll-dis,ll-as}.*
+          
+      - uses: actions/upload-artifact@v3
+        with:
+            name: bin
+            path: llvm-project/build/bin.tgz
