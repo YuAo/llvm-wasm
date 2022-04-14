@@ -17,14 +17,14 @@ jobs:
         run: |
           sudo apt-get -y install ninja-build
           
-          git clone https://github.com/emscripten-core/emsdk -–depth 1
+          git clone https://github.com/emscripten-core/emsdk --depth 1
           cd emsdk
           ./emsdk install latest
           ./emsdk activate latest
           source ./emsdk_env.sh
           cd ..
           
-          git clone https://github.com/llvm/llvm-project -–depth 1
+          git clone https://github.com/llvm/llvm-project --depth 1
           cd llvm-project
           cmake -G Ninja -S llvm -B build-host \
             -DCMAKE_BUILD_TYPE=Release \
