@@ -46,7 +46,7 @@ jobs:
           cmake --build build
           
           cd build
-          tar -czvf bin.tgz bin/{ll-dis,ll-as}.*
+          tar -czvf bin.tgz bin/
           
       - uses: actions/upload-artifact@v3
         with:
