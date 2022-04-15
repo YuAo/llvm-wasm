@@ -41,8 +41,7 @@ jobs:
           -DLLVM_DEFAULT_TARGET_TRIPLE=wasm32-wasi \
           -DLLVM_TARGET_ARCH=wasm32-emscripten \
           #-DLLVM_ENABLE_PROJECTS=lld \
-          -DLLVM_TABLEGEN=$PWD/build-host/bin/llvm-tblgen\
-          -DCLANG_TABLEGEN=$PWD/build-host/bin/clang-tblgen
+          -DLLVM_TABLEGEN=$PWD/build-host/bin/llvm-tblgen
           cmake --build build
           
           cd build
