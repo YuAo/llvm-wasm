@@ -39,12 +39,12 @@ jobs:
           -DLLVM_ENABLE_THREADS=OFF \
           -DLLVM_DEFAULT_TARGET_TRIPLE=wasm32-wasi \
           -DLLVM_TARGET_ARCH=wasm32-emscripten \
-          -DLLVM_ENABLE_PROJECTS=lld \
+          #-DLLVM_ENABLE_PROJECTS=lld \
           -DLLVM_TABLEGEN=$PWD/build-host/bin/llvm-tblgen
           cmake --build build
           
           cd build
-          tar -czvf bin.tgz bin/{llc,lld,ll-dis,ll-as}.*
+          tar -czvf bin.tgz bin/{ll-dis,ll-as}.*
           
       - uses: actions/upload-artifact@v3
         with:
