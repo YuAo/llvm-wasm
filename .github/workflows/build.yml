@@ -31,6 +31,7 @@ jobs:
             -DLLVM_ENABLE_PROJECTS=clang
           cmake --build build-host --target clang-tblgen llvm-tblgen
           
+          CXXFLAGS="-Dwait4=__syscall_wait4" \
           emcmake cmake -G Ninja -S llvm -B build \
           -DCMAKE_BUILD_TYPE=Release \
           -DCMAKE_CROSSCOMPILING=True \
@@ -40,7 +41,8 @@ jobs:
           -DLLVM_DEFAULT_TARGET_TRIPLE=wasm32-wasi \
           -DLLVM_TARGET_ARCH=wasm32-emscripten \
           #-DLLVM_ENABLE_PROJECTS=lld \
-          -DLLVM_TABLEGEN=$PWD/build-host/bin/llvm-tblgen
+          -DLLVM_TABLEGEN=$PWD/build-host/bin/llvm-tblgen\
+          -DCLANG_TABLEGEN=$PWD/build-host/bin/clang-tblgen
           cmake --build build
           
           cd build
