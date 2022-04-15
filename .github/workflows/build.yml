@@ -32,7 +32,7 @@ jobs:
           cmake --build build-host --target clang-tblgen llvm-tblgen
           
           CXXFLAGS="-Dwait4=__syscall_wait4 -O3" \
-          LDFLAGS="-s NO_ASSERTIONS -s NO_INVOKE_RUN -s EXIT_RUNTIME -s ALLOW_MEMORY_GROWTH -s INITIAL_MEMORY=64MB -s MODULARIZE -s EXPORT_ES6 -s EXTRA_EXPORTED_RUNTIME_METHODS=["callMain","FS"]" \
+          LDFLAGS="-s NO_ASSERTIONS -s NO_INVOKE_RUN -s EXIT_RUNTIME -s ALLOW_MEMORY_GROWTH -s INITIAL_MEMORY=64MB -s MODULARIZE -s EXPORT_ES6 -s EXPORTED_RUNTIME_METHODS=["callMain","FS"]" \
           emcmake cmake -G Ninja -S llvm -B build \
           -DCMAKE_BUILD_TYPE=Release \
           -DCMAKE_CROSSCOMPILING=True \
@@ -43,7 +43,7 @@ jobs:
           -DLLVM_BUILD_LLVM_DYLIB=OFF \
           -DLLVM_INCLUDE_TESTS=OFF \
           -DLLVM_TABLEGEN=$PWD/build-host/bin/llvm-tblgen
-          cmake --build build
+          cmake --build build --target llvm-dis
           
           cd build
           tar -czvf bin.tgz bin/
